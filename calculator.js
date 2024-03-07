@@ -1,49 +1,30 @@
-let inputString = '';
-let displayValue = '';
-let resultValue = '';
-let operator = '';
+let bufferData = '';
+document.addEventListener('DOMContentLoaded', ()=>{
+    document.querySelector('.numpad').addEventListener('mousedown',(e)=>{
+        console.log(e.target.tagName + e.target.innerText);
+        switch(e.target.innerText){
+            case "AC":
+                //초기화
+                bufferData = '';
+                document.querySelector('.pane').innerText = '0';
+                break;
+            case "=":
+                //계산 결과를 표시하고 버퍼 초기화(초기화를 후에 해야 함)
+                document.querySelector('.pane').innerText = calc(bufferData);
+                bufferData = ''
+                break;
+            default:
+                //버퍼에 입력 숫자와 연산자 누적
+                if(!(bufferData == '' && e.target.innerText == '0')){
+                    bufferData += ''+e.target.innerText;
+                    document.querySelector('.pane').innerText = bufferData;
+                }
+                break;
+        }
+    })
+})
 
-function input(value) {
-  inputString += value;
-  displayValue += value;
-  document.querySelector('.display').value = displayValue
-  }
-
-function calculate() {
-  let calculation = inputString.split(operator);
-  let operand1 = parseFloat(calculation[0]);
-  let operand2 = parseFloat(calculation[1]);
-  switch(operator) {
-    case '+':
-      resultValue = operand1 + operand2;
-      break;
-    case '-':
-      resultValue = operand1 - operand2;
-      break;
-    case '*':
-      resultValue = operand1 * operand2;
-      break;
-    case '/':
-      resultValue = operand1 / operand2;
-    break;
-    default:
-      resultValue = '';
-  }
-  document.querySelector('.display').value = resultValue;
-  inputString = resultValue.toString();
-  displayValue = '';
-}
-
-function clearDisplay() {
-  inputString = '';
-  displayValue = '';
-  resultValue = '';
-  operator = '';
-  document.querySelector('.display').value = '';
-}
-
-function backspace() {
-  inputString = inputString.slice(0, -1);
-  displayValue = displayValue.slice(0, -1);
-  document.querySelector('.display').value = displayValue;
+//Function() 생성자로 계산식을 동적 함수로 생성한 후 즉시 실행한 결과를 반환함.
+function calc(fomula){
+    return new Function('return '+fomula)()
 }
